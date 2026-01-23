@@ -9,7 +9,7 @@ import java.util.*;
 @RequestMapping("/pk/")
 public class BotInfoController {
 
-    @RequestMapping("getbotinfo/")
+    @RequestMapping("/getbotinfo/")
     public Map<String, String> getBotInfo() {
 
         Map<String, String> bot1 = new HashMap<String, String>();
