@@ -1,5 +1,5 @@
 <template>
-        <ContentField>  <!--对局列表就会渲染到slot里-->
+        <ContentField v-if="!$store.state.user.pulling_info">  <!--对局列表就会渲染到slot里-->
             <div class="row justify-content-md-center">
                 <div class="col-3">
                     <form @submit.prevent="login">  <!--提交的话就触发,阻止默认行为-->
@@ -23,7 +23,7 @@
 import ContentField from '@/components/ContentField.vue';
 import { useStore } from 'vuex';
 import { ref }  from 'vue';
-import router from '@/router/index';
+import router from '@/router';
 
 export default {
     components: {
@@ -35,6 +35,22 @@ export default {
         let password = ref('');
         let error_message = ref('');
 
+        const jwt_token = localStorage.getItem("jwt_token");
+        if (jwt_token) {
+            store.commit("updateToken", jwt_token);  //调用store中的user.js中的mutations里面的要用commit
+            store.dispatch("getinfo", {
+                success() {
+                    router.push({name: "home"});
+                    store.commit("updatePulling_Info", false);
+                },
+                error() {
+                    store.commit("updatePulling_Info", false);
+                }
+            });
+        } else {
+            store.commit("updatePulling_Info", false);
+        }
+
         
         const login = () => {  //触发函数
             error_message.value = "";
@@ -45,8 +61,6 @@ export default {
                     store.dispatch("getinfo", {
                         success() {
                             router.push({ name: 'home'});
-                            console.log(store.state.user);
-
                         }
                     })
 

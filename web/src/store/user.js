@@ -8,6 +8,7 @@ export default {
     photo: "",
     token: "",
     is_login: false,
+    pulling_info: true,  //表示我们是不是在获取信息当中
   },
   getters: {
   },
@@ -28,7 +29,10 @@ export default {
       state.token = "";
       state.is_login = false;
     },
+    updatePulling_Info(state, pulling_info) {
+      state.pulling_info = pulling_info;
 
+    }
   },
   actions: {
     login(context, data) {
@@ -41,6 +45,7 @@ export default {
             },
             success(resp) {
                 if(resp.error_message === "success") {
+                    localStorage.setItem("jwt_token",resp.token);
                     context.commit("updateToken", resp.token);
                     data.success(resp); 
                 } else {
@@ -74,13 +79,15 @@ export default {
             }
         },
         error(resp) {
-          data.error_message(resp);
+          data.error(resp);
         },
       });
     },
     logout(context) {
+      localStorage.removeItem("jwt_token");
       context.commit("logout");
     },
+   
     
   },
   modules: {

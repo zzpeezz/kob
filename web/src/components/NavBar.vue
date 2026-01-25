@@ -28,7 +28,7 @@
           </ul>
         </li>
       </ul>
-      <ul class="navbar-nav" v-else>
+      <ul class="navbar-nav" v-else-if="!$store.state.user.pulling_info">
         <li class="nav-item ">
           <router-link class="nav-link " :to="{name:'user_account_login'}" role="button" >
             登录
@@ -53,8 +53,7 @@ export default {
     setup() {     //入口函数
       const store = useStore();
       const route = useRoute();  //先把useRoute取出来，实时返回当前Route的name是什么
-      let route_name = computed(()=> route.name)
-
+      let route_name = computed(()=> route.name);
       const logout = () => {
             store.dispatch("logout");
       }
